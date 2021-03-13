@@ -1,14 +1,5 @@
 name: GitHub CI
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  release:
-    types: released
-
+on: [push, pull_request]
 env:
   CI_REQ_DOTNET_SDK_VER: 5.0.100
 
@@ -27,16 +18,6 @@ jobs:
           dotnet-version: ${{env.CI_REQ_DOTNET_SDK_VER}}
 
       # Build each tfm separately since building all requires too much disk space
-      - name: Build dnSpy (.NET Framework)
-        shell: pwsh
-        run: |
-          $msbuildPath = Split-Path (& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\Current\Bin\amd64\MSBuild.exe | Select-Object -First 1) -Parent
-          $env:PATH = $msbuildPath + ';' + $env:PATH
-          .\build.ps1 netframework
-          New-Item -ItemType Directory -Path C:\builtfiles -Force > $null
-          Compress-Archive -Path dnSpy\dnSpy\bin\Release\net48\* -DestinationPath C:\builtfiles\dnSpy-netframework.zip
-          .\clean-all.cmd
-
       - name: Build dnSpy (.NET x86)
         shell: pwsh
         run: |
@@ -55,6 +36,17 @@ jobs:
           .\build.ps1 net-x64
           New-Item -ItemType Directory -Path C:\builtfiles -Force > $null
           Compress-Archive -Path dnSpy\dnSpy\bin\Release\net5.0-windows\win-x64\publish\* -DestinationPath C:\builtfiles\dnSpy-net-win64.zip
+          .\clean-all.cmd
+
+      - name: Build dnSpy (.NET Framework)
+        shell: pwsh
+        run: |
+          $msbuildPath = Split-Path (& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\Current\Bin\amd64\MSBuild.exe | Select-Object -First 1) -Parent
+          $env:PATH = $msbuildPath + ';' + $env:PATH
+          dotnet nuget locals all --clear
+          .\build.ps1 netframework
+          New-Item -ItemType Directory -Path C:\builtfiles -Force > $null
+          Compress-Archive -Path dnSpy\dnSpy\bin\Release\net48\* -DestinationPath C:\builtfiles\dnSpy-netframework.zip
           .\clean-all.cmd
 
       - uses: actions/upload-artifact@v2
