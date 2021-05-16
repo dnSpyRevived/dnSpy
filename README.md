@@ -94,10 +94,10 @@ To debug Unity games, you need this repo too: https://github.com/dnSpy/dnSpy-Uni
 
 # Wiki
 
-See the [Wiki](https://github.com/dnSpy/dnSpy/wiki) for build instructions and other documentation.
+See the [Wiki](https://github.com/dnSpyRevived/dnSpy/wiki) for build instructions and other documentation.
 
 # License
 
-dnSpy is licensed under [GPLv3](dnSpy/dnSpy/LicenseInfo/GPLv3.txt).
+dnSpy is licensed under [GPLv3](dnSpyRevived/dnSpy/LicenseInfo/GPLv3.txt).
 
 # [Credits](dnSpy/dnSpy/LicenseInfo/CREDITS.txt)
